@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#0a0a0f" />
+<title>كاجوجي TV | مشاهدة أفلام ومسلسلات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   1. المتغيرات
+   ============================================================ */
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131c;
+  --surface-2:#1c1c28;
+  --surface-3:#242433;
+  --border:rgba(255,255,255,.08);
+  --border-hover:rgba(255,255,255,.2);
+  --text:#f2f2f7;
+  --muted:#8b8ba3;
+  --accent:#8b5cf6;
+  --accent-2:#ec4899;
+  --gold:#fbbf24;
+  --green:#22c55e;
+  --red:#ef4444;
+  --radius:16px;
+  --shadow:0 24px 60px -24px rgba(0,0,0,.95);
+  --grad:linear-gradient(135deg,#8b5cf6,#ec4899);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Cairo',system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; overflow-x:hidden; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;
+  user-select:none;
+}
+body::before{
+  content:''; position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(760px circle at 10% -8%, rgba(139,92,246,.16), transparent 62%),
+    radial-gradient(760px circle at 92% 2%, rgba(236,72,153,.11), transparent 62%);
+  pointer-events:none;
+}
+body.locked{overflow:hidden}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#2e2e40;border-radius:20px}
+::-webkit-scrollbar-thumb:hover{background:#3d3d55}
+button,input,select{font-family:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+img{max-width:100%;display:block;-webkit-user-drag:none;user-drag:none;pointer-events:none}
+input,select,textarea{-webkit-user-select:text;user-select:text}
+.hidden{display:none !important}
+main{position:relative;z-index:1}
+
+/* ============================================================
+   2. شاشة تسجيل الدخول / إنشاء حساب
+   ============================================================ */
+#authScreen{
+  position:fixed; inset:0; z-index:3000;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px; overflow-y:auto;
+  background:
+    radial-gradient(900px circle at 20% -10%, rgba(139,92,246,.25), transparent 55%),
+    radial-gradient(900px circle at 85% 15%, rgba(236,72,153,.2), transparent 55%),
+    linear-gradient(180deg,#0a0a0f,#13131c);
+}
+#authScreen::before{
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(139,92,246,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,.04) 1px, transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(circle at center, black 20%, transparent 80%);
+  -webkit-mask-image:radial-gradient(circle at center, black 20%, transparent 80%);
+  pointer-events:none;
+}
+.auth-card{
+  position:relative; z-index:2;
+  width:min(450px,100%);
+  background:rgba(19,19,28,.72);
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  padding:34px 30px 30px;
+  box-shadow:0 40px 100px -30px rgba(0,0,0,.9);
+  animation:authIn .6s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes authIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+
+.auth-brand{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin-bottom:6px;
+}
+.auth-brand .mark{
+  width:52px; height:52px; border-radius:15px; background:var(--grad);
+  display:grid; place-items:center; font-size:26px;
+  box-shadow:0 14px 36px -10px rgba(139,92,246,.95);
+}
+.auth-brand h1{
+  font-size:26px; font-weight:900; letter-spacing:-.6px;
+  background:var(--grad); -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.auth-sub{
+  text-align:center; color:var(--muted); font-size:13.5px;
+  margin-bottom:24px; font-weight:600;
+}
+
+.auth-tabs{
+  display:grid; grid-template-columns:1fr 1fr; gap:6px;
+  padding:5px; background:var(--surface-2);
+  border-radius:14px; margin-bottom:22px;
+  border:1px solid var(--border);
+}
+.auth-tab{
+  padding:11px; border-radius:10px;
+  font-size:14px; font-weight:700; color:var(--muted);
+  transition:.28s cubic-bezier(.2,.8,.2,1);
+}
+.auth-tab.active{
+  background:var(--grad); color:#fff;
+  box-shadow:0 8px 22px -8px rgba(139,92,246,.95);
+}
+
+.auth-form{display:none; animation:fadeUp .4s both}
+.auth-form.active{display:block}
+
+.form-group{margin-bottom:14px}
+.form-group label{
+  display:block; font-size:13px; font-weight:700;
+  color:#b9b9cd; margin-bottom:7px;
+}
+.form-input{
+  position:relative;
+}
+.form-input svg{
+  position:absolute; inset-inline-start:14px; top:50%; transform:translateY(-50%);
+  width:18px; height:18px; stroke:var(--muted); pointer-events:none;
+}
+.form-input input{
+  width:100%; padding:13px 44px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  font-size:14.5px; outline:none;
+  transition:.25s;
+}
+.form-input input::placeholder{color:#5f5f78}
+.form-input input:focus{
+  border-color:rgba(139,92,246,.65);
+  background:var(--surface-3);
+  box-shadow:0 0 0 4px rgba(139,92,246,.14);
+}
+.form-input .toggle-pw{
+  position:absolute; inset-inline-end:10px; top:50%; transform:translateY(-50%);
+  width:32px; height:32px; border-radius:8px;
+  display:grid; place-items:center;
+  color:var(--muted); font-size:16px;
+  transition:.2s;
+}
+.form-input .toggle-pw:hover{background:var(--surface-3); color:var(--text)}
+
+.auth-btn{
+  width:100%; padding:14px; margin-top:8px;
+  border-radius:12px; background:var(--grad);
+  color:#fff; font-weight:800; font-size:15px;
+  box-shadow:0 14px 34px -12px rgba(139,92,246,.95);
+  transition:.28s cubic-bezier(.2,.8,.2,1);
+}
+.auth-btn:hover:not(:disabled){transform:translateY(-2px); box-shadow:0 20px 42px -14px rgba(139,92,246,1)}
+.auth-btn:disabled{opacity:.6; cursor:wait}
+
+.auth-msg{
+  padding:11px 15px; border-radius:11px;
+  font-size:13px; font-weight:600;
+  margin-bottom:14px; display:none;
+}
+.auth-msg.show{display:block; animation:fadeUp .3s both}
+.auth-msg.error{background:rgba(239,68,68,.13); border:1px solid rgba(239,68,68,.35); color:#fca5a5}
+.auth-msg.success{background:rgba(34,197,94,.13); border:1px solid rgba(34,197,94,.35); color:#86efac}
+
+.auth-note{
+  text-align:center; margin-top:18px;
+  font-size:12px; color:var(--muted); line-height:1.7;
+}
+.auth-note a{color:#a78bfa; text-decoration:none; font-weight:700}
+.auth-note a:hover{text-decoration:underline}
+
+/* ============================================================
+   3. الهيدر
+   ============================================================ */
+header{
+  position:sticky; top:0; z-index:200;
+  background:rgba(10,10,15,.82);
+  backdrop-filter:blur(24px) saturate(170%);
+  -webkit-backdrop-filter:blur(24px) saturate(170%);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{
+  max-width:1500px; margin:0 auto; padding:13px 28px;
+  display:flex; align-items:center; gap:20px;
+}
+.logo{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); flex-shrink:0}
+.logo-mark{
+  width:40px; height:40px; border-radius:12px; background:var(--grad);
+  display:grid; place-items:center; font-size:20px;
+  box-shadow:0 8px 24px -8px rgba(139,92,246,.9);
+}
+.logo-text{
+  font-weight:900; font-size:20px; letter-spacing:-.5px;
+  background:var(--grad); -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+nav{display:flex; gap:6px}
+.nav-btn{
+  padding:9px 16px; border-radius:11px; font-weight:600; font-size:14.5px;
+  color:var(--muted); transition:.25s;
+}
+.nav-btn:hover{color:var(--text); background:var(--surface-2)}
+.nav-btn.active{color:var(--text); background:var(--surface-3)}
+
+.search-wrap{margin-inline-start:auto; position:relative; width:min(360px,38vw); flex-shrink:1}
+.search-wrap svg{
+  position:absolute; inset-inline-start:14px; top:50%; transform:translateY(-50%);
+  width:17px; height:17px; stroke:var(--muted); pointer-events:none;
+}
+#searchInput{
+  width:100%; padding:11px 42px; border-radius:12px;
+  background:var(--surface-2); border:1px solid var(--border);
+  font-size:14px; outline:none; transition:.25s;
+}
+#searchInput::placeholder{color:#5f5f78}
+#searchInput:focus{
+  border-color:rgba(139,92,246,.6); background:var(--surface-3);
+  box-shadow:0 0 0 4px rgba(139,92,246,.12);
+}
+#clearSearch{
+  position:absolute; inset-inline-end:9px; top:50%; transform:translateY(-50%);
+  width:26px; height:26px; border-radius:8px; display:none; place-items:center;
+  color:var(--muted); font-size:16px; transition:.2s;
+}
+#clearSearch:hover{background:var(--surface-3); color:var(--text)}
+#clearSearch.show{display:grid}
+
+/* حساب المستخدم */
+.user-chip{
+  display:flex; align-items:center; gap:9px;
+  padding:5px 12px 5px 5px; border-radius:100px;
+  background:var(--surface-2); border:1px solid var(--border);
+  flex-shrink:0; cursor:pointer; transition:.25s;
+}
+.user-chip:hover{border-color:var(--border-hover); background:var(--surface-3)}
+.user-avatar{
+  width:32px; height:32px; border-radius:50%;
+  background:var(--grad); color:#fff;
+  display:grid; place-items:center;
+  font-weight:800; font-size:13px;
+}
+.user-name{
+  font-size:13px; font-weight:700;
+  max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.user-menu{
+  position:absolute; top:calc(100% + 8px); inset-inline-end:0;
+  min-width:200px; padding:6px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; box-shadow:var(--shadow);
+  z-index:250; display:none;
+}
+.user-menu.open{display:block; animation:fadeUp .25s both}
+.user-menu-header{
+  padding:12px 14px; border-bottom:1px solid var(--border);
+  margin-bottom:6px;
+}
+.user-menu-header b{display:block; font-size:14px; margin-bottom:3px}
+.user-menu-header small{color:var(--muted); font-size:12px;
+  display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.user-menu button{
+  width:100%; display:flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:10px;
+  font-size:13.5px; font-weight:600; color:var(--text);
+  transition:.2s;
+}
+.user-menu button:hover{background:var(--surface-2)}
+.user-menu button.danger{color:#fca5a5}
+.user-menu button.danger:hover{background:rgba(239,68,68,.12)}
+.user-menu button svg{width:16px; height:16px}
+
+/* ============================================================
+   4. الهيرو
+   ============================================================ */
+#hero{
+  position:relative; min-height:clamp(380px,68vh,640px);
+  display:flex; align-items:flex-end; overflow:hidden; margin-bottom:8px;
+}
+.hero-bg{
+  position:absolute; inset:0; background-size:cover; background-position:center 22%;
+  transform:scale(1.06); animation:heroZoom 20s ease-out forwards;
+}
+@keyframes heroZoom{to{transform:scale(1)}}
+.hero-bg::after{
+  content:''; position:absolute; inset:0;
+  background:
+    linear-gradient(to top, var(--bg) 2%, rgba(10,10,15,.82) 34%, rgba(10,10,15,.25) 68%, rgba(10,10,15,.6) 100%),
+    linear-gradient(to left, transparent 30%, rgba(10,10,15,.85) 100%);
+}
+.hero-inner{
+  position:relative; max-width:1500px; width:100%; margin:0 auto; padding:0 28px 50px;
+  display:flex; align-items:flex-end; gap:32px;
+}
+.hero-poster{
+  width:200px; flex-shrink:0; border-radius:18px; overflow:hidden;
+  box-shadow:var(--shadow); border:1px solid var(--border-hover); display:none;
+}
+.hero-poster img{width:100%; aspect-ratio:2/3; object-fit:cover}
+@media(min-width:900px){.hero-poster{display:block}}
+.hero-content{flex:1; min-width:0; animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.hero-tag{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 14px; border-radius:100px;
+  background:rgba(139,92,246,.16); border:1px solid rgba(139,92,246,.35);
+  color:#c4b5fd; font-size:12.5px; font-weight:700; margin-bottom:14px;
+  backdrop-filter:blur(8px);
+}
+.hero-tag .dot{
+  width:7px; height:7px; border-radius:50%; background:#a78bfa;
+  box-shadow:0 0 10px #a78bfa; animation:pulse 1.8s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero-title{
+  font-size:clamp(26px,4.5vw,56px); font-weight:900; line-height:1.12;
+  letter-spacing:-1.2px; margin-bottom:14px;
+  text-shadow:0 4px 30px rgba(0,0,0,.7);
+}
+.hero-meta{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px;
+  color:#b9b9cd; font-size:14px; font-weight:600; margin-bottom:16px;
+}
+.hero-meta .star{color:var(--gold)}
+.hero-meta .sep{width:4px; height:4px; border-radius:50%; background:#4a4a63}
+.hero-overview{
+  max-width:620px; color:#c3c3d6; font-size:15px; line-height:1.85;
+  margin-bottom:24px; display:-webkit-box; -webkit-line-clamp:3;
+  -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* ============================================================
+   5. الأزرار
+   ============================================================ */
+.btn{
+  display:inline-flex; align-items:center; gap:9px;
+  padding:12px 24px; border-radius:13px;
+  font-weight:700; font-size:14.5px;
+  transition:.28s cubic-bezier(.2,.8,.2,1); white-space:nowrap;
+}
+.btn svg{width:18px; height:18px}
+.btn-primary{
+  background:var(--grad); color:#fff;
+  box-shadow:0 12px 32px -12px rgba(139,92,246,.95);
+}
+.btn-primary:hover{transform:translateY(-3px); box-shadow:0 20px 42px -14px rgba(139,92,246,1)}
+.btn-ghost{
+  background:rgba(255,255,255,.09); border:1px solid var(--border-hover);
+  color:var(--text); backdrop-filter:blur(10px);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.16); transform:translateY(-3px)}
+.btn:disabled{opacity:.5; cursor:not-allowed; transform:none !important}
+
+/* ============================================================
+   6. التصنيفات
+   ============================================================ */
+.chips-bar{
+  max-width:1500px; margin:0 auto; padding:6px 28px 24px;
+  display:flex; gap:10px; overflow-x:auto; scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.chips-bar::-webkit-scrollbar{display:none}
+.chip{
+  padding:8px 18px; border-radius:100px;
+  background:var(--surface-2); border:1px solid var(--border);
+  color:var(--muted); font-size:13px; font-weight:600;
+  white-space:nowrap; transition:.25s; flex-shrink:0;
+}
+.chip:hover{color:var(--text); border-color:var(--border-hover); background:var(--surface-3)}
+.chip.active{
+  background:var(--grad); color:#fff; border-color:transparent;
+  box-shadow:0 8px 22px -10px rgba(139,92,246,.95);
+}
+
+/* ============================================================
+   7. الصفوف والكروت
+   ============================================================ */
+.row-section{
+  max-width:1500px; margin:0 auto; padding:0 28px 36px;
+  animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) both;
+}
+.row-head{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin-bottom:14px;
+}
+.row-title{
+  font-size:clamp(16px,2.2vw,22px); font-weight:800; letter-spacing:-.5px;
+  display:flex; align-items:center; gap:10px;
+}
+.row-title::before{content:''; width:4px; height:20px; border-radius:4px; background:var(--grad)}
+.row-scroll{
+  display:flex; gap:14px; overflow-x:auto; overflow-y:hidden;
+  padding:6px 2px 16px; scroll-snap-type:x proximity; scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+}
+.row-scroll::-webkit-scrollbar{height:6px}
+.row-scroll::-webkit-scrollbar-thumb{background:#2b2b3d; border-radius:20px}
+
+.card{
+  position:relative; flex:0 0 auto; width:168px; aspect-ratio:2/3;
+  border-radius:15px; overflow:hidden; background:var(--surface-2);
+  cursor:pointer; scroll-snap-align:start;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+  animation:fadeUp .5s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay:var(--d,0ms);
+}
+.card:hover{
+  transform:translateY(-8px) scale(1.03);
+  box-shadow:0 22px 44px -18px rgba(0,0,0,.95), 0 0 0 1px rgba(139,92,246,.45);
+  z-index:5;
+}
+.card img{width:100%; height:100%; object-fit:cover; transition:transform .6s}
+.card:hover img{transform:scale(1.07)}
+.card-shade{
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(8,8,13,.96) 4%, rgba(8,8,13,.45) 34%, transparent 62%);
+}
+.card-rating{
+  position:absolute; top:8px; inset-inline-end:8px;
+  padding:4px 8px; border-radius:8px;
+  background:rgba(10,10,15,.82); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:11px; font-weight:800; color:var(--gold);
+  display:flex; align-items:center; gap:3px;
+}
+.card-type{
+  position:absolute; top:8px; inset-inline-start:8px;
+  padding:4px 8px; border-radius:8px;
+  background:rgba(139,92,246,.85); backdrop-filter:blur(10px);
+  font-size:10px; font-weight:800; color:#fff;
+}
+.card-info{position:absolute; inset-inline:0; bottom:0; padding:10px}
+.card-info h3{
+  font-size:13px; font-weight:700; line-height:1.4;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden; margin-bottom:2px;
+}
+.card-info span{font-size:11px; color:var(--muted); font-weight:600}
+
+/* ============================================================
+   8. شبكة الاستعراض
+   ============================================================ */
+.browse-head{
+  max-width:1500px; margin:0 auto; padding:14px 28px 20px;
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+}
+.browse-head h2{font-size:clamp(20px,2.8vw,28px); font-weight:900; letter-spacing:-.8px}
+.browse-head span{color:var(--muted); font-size:13.5px; font-weight:600}
+.grid{
+  max-width:1500px; margin:0 auto; padding:0 28px 40px;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  gap:16px;
+}
+.grid .card{width:100%}
+.load-more-wrap{display:flex; justify-content:center; padding:8px 0 60px}
+#loadMore{
+  padding:13px 40px; border-radius:13px;
+  background:var(--surface-2); border:1px solid var(--border);
+  font-weight:700; font-size:14.5px; transition:.28s;
+}
+#loadMore:hover{border-color:rgba(139,92,246,.6); background:var(--surface-3); transform:translateY(-2px)}
+#loadMore:disabled{opacity:.5; cursor:default; transform:none}
+
+/* ============================================================
+   9. هياكل التحميل
+   ============================================================ */
+.sk{
+  background:linear-gradient(100deg,#1a1a26 20%,#252534 40%,#1a1a26 60%);
+  background-size:220% 100%; animation:shimmer 1.5s infinite linear;
+  border-radius:15px;
+}
+@keyframes shimmer{to{background-position:-220% 0}}
+.sk-card{width:168px; aspect-ratio:2/3; flex:0 0 auto}
+.sk-hero{height:clamp(380px,68vh,640px); border-radius:0; width:100%}
+
+/* ============================================================
+   10. النافذة المنبثقة
+   ============================================================ */
+.modal{
+  position:fixed; inset:0; z-index:1000; display:none;
+  align-items:flex-start; justify-content:center;
+  padding:24px 16px; overflow-y:auto;
+}
+.modal.open{display:flex; animation:fadeIn .3s both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(5,5,9,.85);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+}
+.modal-panel{
+  position:relative; width:min(1000px,100%);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; overflow:hidden; box-shadow:var(--shadow);
+  animation:modalIn .45s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.modal-close{
+  position:absolute; top:14px; inset-inline-end:14px; z-index:20;
+  width:38px; height:38px; border-radius:50%;
+  background:rgba(10,10,15,.82); border:1px solid var(--border-hover);
+  backdrop-filter:blur(10px); display:grid; place-items:center;
+  font-size:18px; color:#fff; transition:.25s;
+}
+.modal-close:hover{background:var(--accent); transform:rotate(90deg)}
+
+.modal-hero{position:relative; min-height:300px; display:flex; align-items:flex-end}
+.modal-hero img.bd{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center 20%;
+}
+.modal-hero::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to top, var(--surface) 3%, rgba(19,19,28,.86) 42%, rgba(19,19,28,.32) 100%);
+}
+.modal-hero-content{
+  position:relative; z-index:2; display:flex; gap:22px; align-items:flex-end;
+  padding:30px 30px 24px; width:100%;
+}
+.modal-poster{
+  width:140px; flex-shrink:0; border-radius:14px; overflow:hidden;
+  border:1px solid var(--border-hover); box-shadow:var(--shadow); display:none;
+}
+@media(min-width:620px){.modal-poster{display:block}}
+.modal-poster img{width:100%; aspect-ratio:2/3; object-fit:cover}
+.modal-titles{flex:1; min-width:0}
+.modal-titles h2{
+  font-size:clamp(20px,3.2vw,30px); font-weight:900; line-height:1.2;
+  letter-spacing:-.8px; margin-bottom:10px;
+}
+.modal-meta{
+  display:flex; flex-wrap:wrap; gap:8px 14px;
+  color:#b9b9cd; font-size:13px; font-weight:600; margin-bottom:16px;
+}
+.modal-meta .star{color:var(--gold)}
+.modal-meta .pill{
+  padding:4px 12px; border-radius:100px;
+  background:rgba(255,255,255,.08); border:1px solid var(--border);
+}
+.modal-body{padding:0 30px 34px}
+.genre-list{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px}
+.genre-list span{
+  padding:6px 14px; border-radius:100px;
+  background:rgba(139,92,246,.14); border:1px solid rgba(139,92,246,.32);
+  color:#c4b5fd; font-size:12px; font-weight:700;
+}
+.modal-overview{color:#c3c3d6; font-size:14.5px; line-height:1.95; margin-bottom:28px}
+.sec-title{
+  font-size:16px; font-weight:800; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.sec-title::before{content:''; width:4px; height:17px; border-radius:4px; background:var(--grad)}
+.cast-list{
+  display:flex; gap:14px; overflow-x:auto; padding-bottom:14px;
+  margin-bottom:12px; scrollbar-width:thin; -webkit-overflow-scrolling:touch;
+}
+.cast-list::-webkit-scrollbar{height:5px}
+.cast-list::-webkit-scrollbar-thumb{background:#2b2b3d; border-radius:20px}
+.cast-item{flex:0 0 auto; width:88px; text-align:center}
+.cast-item img{
+  width:88px; height:88px; border-radius:50%; object-fit:cover;
+  margin-bottom:8px; border:2px solid var(--border); background:var(--surface-3);
+}
+.cast-item b{
+  display:-webkit-box; font-size:11.5px; font-weight:700; line-height:1.35;
+  -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.cast-item small{
+  font-size:10.5px; color:var(--muted);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.similar-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(115px,1fr)); gap:12px}
+.similar-grid .card{width:100%}
+
+/* ============================================================
+   11. المشغّل
+   ============================================================ */
+.player-section{margin-bottom:26px}
+.player-toolbar{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;
+}
+.player-toolbar .label{font-size:12.5px; color:var(--muted); font-weight:700}
+.server-btn{
+  padding:7px 14px; border-radius:10px; background:var(--surface-2);
+  border:1px solid var(--border); font-size:12.5px; font-weight:700;
+  color:var(--muted); transition:.25s;
+}
+.server-btn:hover{color:var(--text); border-color:var(--border-hover); background:var(--surface-3)}
+.server-btn.active{
+  background:var(--grad); color:#fff; border-color:transparent;
+  box-shadow:0 6px 18px -8px rgba(139,92,246,.9);
+}
+select.server-btn{
+  appearance:none; padding-inline:14px 28px; cursor:pointer;
+}
+select.server-btn.active{background-color:rgba(139,92,246,.15); color:#c4b5fd}
+
+.player-frame{
+  position:relative; width:100%; aspect-ratio:16/9;
+  background:#000; border-radius:14px; overflow:hidden;
+  border:1px solid var(--border);
+}
+.player-frame iframe{
+  width:100%; height:100%; border:0; display:block;
+  position:relative; z-index:1;
+}
+.player-fallback{
+  position:absolute; inset:0; display:grid; place-items:center;
+  background:#08080d; text-align:center; padding:24px; z-index:2;
+}
+.player-fallback p{color:var(--muted); font-size:13.5px; margin-bottom:8px; max-width:440px}
+.player-status{
+  display:flex; align-items:center; gap:8px; font-size:12.5px;
+  color:var(--muted); margin-top:10px; font-weight:600;
+}
+.player-status .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--green); box-shadow:0 0 8px var(--green);
+}
+.player-status .dot.warn{background:var(--gold); box-shadow:0 0 8px var(--gold)}
+
+/* حماية المشغّل من التنزيل */
+.player-frame::after{
+  content:'كاجوجي TV'; position:absolute; bottom:14px; inset-inline-end:14px;
+  font-size:11px; color:rgba(255,255,255,.18); font-weight:800;
+  pointer-events:none; z-index:3; letter-spacing:1px;
+}
+
+/* ============================================================
+   12. الفوتر والتنبيهات
+   ============================================================ */
+footer{
+  position:relative; z-index:1; border-top:1px solid var(--border);
+  padding:32px 24px; text-align:center;
+  color:var(--muted); font-size:13px;
+}
+footer b{
+  background:var(--grad); -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+#toast{
+  position:fixed; bottom:24px; inset-inline-start:50%;
+  transform:translate(50%,120px); z-index:2500;
+  padding:12px 24px; border-radius:13px;
+  background:var(--surface-3); border:1px solid var(--border-hover);
+  box-shadow:var(--shadow); font-size:13.5px; font-weight:600;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1); pointer-events:none;
+  max-width:90vw;
+}
+#toast.show{transform:translate(50%,0)}
+
+/* ============================================================
+   13. شريط التنقل السفلي للهاتف
+   ============================================================ */
+.bottom-nav{display:none}
+
+/* ============================================================
+   14. التصميم المتجاوب للهاتف
+   ============================================================ */
+@media (max-width:768px){
+  .header-inner{padding:10px 14px; gap:10px}
+  .logo-text{display:none}
+  .logo-mark{width:38px; height:38px; font-size:19px}
+  nav{display:none}
+  .search-wrap{width:auto; flex:1; min-width:0}
+  #searchInput{padding:10px 38px; font-size:14px}
+  .user-name{display:none}
+  .user-chip{padding:4px}
+
+  /* شريط سفلي */
+  .bottom-nav{
+    display:flex;
+    position:fixed; bottom:0; left:0; right:0;
+    background:rgba(10,10,15,.95);
+    backdrop-filter:blur(22px) saturate(170%);
+    -webkit-backdrop-filter:blur(22px) saturate(170%);
+    border-top:1px solid var(--border);
+    z-index:250;
+    padding:6px 0;
+    padding-bottom:max(6px, env(safe-area-inset-bottom));
+  }
+  .bottom-nav button{
+    flex:1;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:8px 4px; border-radius:10px;
+    color:var(--muted); font-size:10.5px; font-weight:700;
+    transition:.25s; position:relative;
+  }
+  .bottom-nav button.active{color:#fff}
+  .bottom-nav button.active svg{stroke:url(#gradient); filter:drop-shadow(0 0 8px rgba(139,92,246,.6))}
+  .bottom-nav button svg{width:22px; height:22px; stroke:currentColor; transition:.25s}
+  .bottom-nav button.active::before{
+    content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:24px; height:3px; border-radius:0 0 4px 4px;
+    background:var(--grad);
+  }
+
+  body{padding-bottom:72px}
+  footer{padding-bottom:80px}
+
+  .hero-inner{padding:0 14px 40px}
+  .hero-title{font-size:26px}
+  .hero-meta{font-size:12.5px}
+  .hero-overview{font-size:13.5px; -webkit-line-clamp:2}
+  .btn{padding:11px 20px; font-size:13.5px}
+
+  .chips-bar{padding:6px 14px 20px}
+  .chip{padding:7px 15px; font-size:12.5px}
+
+  .row-section{padding:0 14px 30px}
+  .row-title{font-size:16px}
+  .card{width:135px; border-radius:13px}
+
+  .grid{padding:0 14px 30px; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px}
+  .browse-head{padding:14px 14px 18px}
+
+  .modal{padding:0; align-items:flex-end}
+  .modal-panel{border-radius:22px 22px 0 0; max-height:95vh; overflow-y:auto}
+  .modal-hero{min-height:220px}
+  .modal-hero-content{padding:20px 18px 16px; gap:14px}
+  .modal-poster{width:100px}
+  .modal-titles h2{font-size:19px}
+  .modal-meta{font-size:12px; gap:6px 12px}
+  .modal-body{padding:0 18px 30px}
+  .player-toolbar{gap:6px}
+  .server-btn{padding:6px 12px; font-size:11.5px}
+  .sec-title{font-size:15px}
+  .cast-item{width:76px}
+  .cast-item img{width:76px; height:76px}
+
+  .auth-card{padding:26px 20px 22px; border-radius:20px}
+  .auth-brand h1{font-size:22px}
+  .auth-brand .mark{width:46px; height:46px; font-size:22px}
+  .auth-sub{font-size:12.5px}
+  .form-input input{padding:12px 40px; font-size:14px}
+  .auth-btn{padding:13px; font-size:14.5px}
+
+  #toast{bottom:80px}
+}
+
+@media (max-width:400px){
+  .card{width:120px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); gap:8px}
+}
+
+/* منع السحب والنسخ */
+img, .card, .hero-poster, .modal-poster{-webkit-user-drag:none; user-drag:none}
+::selection{background:rgba(139,92,246,.4); color:#fff}
+
+/* إخفاء الإعلانات التي قد تظهر داخل الصفحة */
+iframe[src*="ads"], iframe[src*="doubleclick"], iframe[src*="googlesyndication"],
+ins.adsbygoogle, .adsbygoogle, [id*="google_ads"], [class*="ad-container"],
+[class*="advertisement"], [id*="advertisement"]{
+  display:none !important; visibility:hidden !important;
+  width:0 !important; height:0 !important; position:absolute !important;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     شاشة تسجيل الدخول / إنشاء حساب
+     ============================================================ -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="mark">🎬</div>
+      <h1>كاجوجي TV</h1>
+    </div>
+    <p class="auth-sub">أفلام ومسلسلات بلا حدود</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">تسجيل الدخول</button>
+      <button class="auth-tab" data-tab="register">إنشاء حساب</button>
+    </div>
+
+    <!-- نموذج الدخول -->
+    <form class="auth-form active" id="loginForm" autocomplete="on">
+      <div class="auth-msg" id="loginMsg"></div>
+
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <div class="form-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="4" width="20" height="16" rx="3"/>
+            <path d="m3 6 9 6 9-6"/>
+          </svg>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="form-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+          <button type="button" class="toggle-pw" data-target="loginPassword">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="auth-btn" id="loginBtn">دخول</button>
+
+      <p class="auth-note">ليس لديك حساب؟ <a href="#" data-switch="register">أنشئ حساباً جديداً</a></p>
+    </form>
+
+    <!-- نموذج إنشاء حساب -->
+    <form class="auth-form" id="registerForm" autocomplete="on">
+      <div class="auth-msg" id="registerMsg"></div>
+
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <div class="form-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21a8 8 0 0 1 16 0"/>
+          </svg>
+          <input type="text" id="regName" placeholder="اسمك" required minlength="2" autocomplete="name" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <div class="form-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="4" width="20" height="16" rx="3"/>
+            <path d="m3 6 9 6 9-6"/>
+          </svg>
+          <input type="email" id="regEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="form-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" required minlength="6" autocomplete="new-password" />
+          <button type="button" class="toggle-pw" data-target="regPassword">👁</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>تأكيد كلمة المرور</label>
+        <div class="form-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input type="password" id="regPassword2" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+          <button type="button" class="toggle-pw" data-target="regPassword2">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="auth-btn" id="registerBtn">إنشاء الحساب</button>
+
+      <p class="auth-note">لديك حساب؟ <a href="#" data-switch="login">سجّل الدخول</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     التطبيق الرئيسي
+     ============================================================ -->
+<div id="app" class="hidden">
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="#" id="logoBtn">
+        <span class="logo-mark">🎬</span>
+        <span class="logo-text">كاجوجي TV</span>
+      </a>
+      <nav>
+        <button class="nav-btn active" data-nav="home">الرئيسية</button>
+        <button class="nav-btn" data-nav="movies">أفلام</button>
+        <button class="nav-btn" data-nav="tv">مسلسلات</button>
+      </nav>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+        <input id="searchInput" type="search" placeholder="ابحث..." autocomplete="off" />
+        <button id="clearSearch" aria-label="مسح">✕</button>
+      </div>
+      <div class="user-chip" id="userChip">
+        <div class="user-avatar" id="userAvatar">م</div>
+        <span class="user-name" id="userName">مستخدم</span>
+      </div>
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu-header">
+          <b id="menuName">مستخدم</b>
+          <small id="menuEmail">user@example.com</small>
+        </div>
+        <button id="logoutBtn" class="danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <path d="m16 17 5-5-5-5M21 12H9"/>
+          </svg>
+          تسجيل الخروج
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero"></section>
+    <div class="chips-bar" id="chips"></div>
+    <div id="rows"></div>
+
+    <div id="browse" class="hidden">
+      <div class="browse-head">
+        <h2 id="browseTitle"></h2>
+        <span id="browseCount"></span>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="load-more-wrap">
+        <button id="loadMore" class="hidden">تحميل المزيد</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>صُنع بـ <b>كاجوجي TV</b> · البيانات من TMDB</footer>
+
+  <!-- شريط التنقل السفلي للهاتف -->
+  <nav class="bottom-nav">
+    <button data-nav="home" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m3 11 9-8 9 8v9a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2z"/>
+      </svg>
+      الرئيسية
+    </button>
+    <button data-nav="movies">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/>
+      </svg>
+      أفلام
+    </button>
+    <button data-nav="tv">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2"/>
+        <path d="m17 2-5 5-5-5"/>
+      </svg>
+      مسلسلات
+    </button>
+    <button data-nav="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      البحث
+    </button>
+  </nav>
+</div>
+
+<!-- النافذة المنبثقة -->
+<div class="modal" id="modal">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" id="modalPanel"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   الإعدادات
+   ============================================================ */
+const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzJjNWExMjE0Njc2YzczMWM1MzM3NDczMWEzMmRmMSIsIm5iZiI6MTc5MDcxNTc0OS42NTQsInN1YiI6IjZhYmMyNzY1ZmY5YjY0OTFlZmU3MDJjNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.__ibj91TbEbnHaCoMxOGeKUz_eETfGIf5GOJOuDEA40';
+const BASE = 'https://api.themoviedb.org/3';
+const IMG  = 'https://image.tmdb.org/t/p';
+const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="342" height="513">
+     <rect width="100%" height="100%" fill="#1c1c28"/>
+     <text x="50%" y="50%" fill="#3d3d55" font-size="30" text-anchor="middle"
+           font-family="sans-serif" dominant-baseline="middle">لا صورة</text>
+   </svg>`);
+
+/* ============================================================
+   مزوّدو البث
+   ============================================================ */
+const STREAM_PROVIDERS = [
+  { id:'vidsrc.to',  label:'VidSrc',
+    movie:(id)=>`https://vidsrc.to/embed/movie/${id}`,
+    tv:(id,s,e)=>`https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
+  { id:'vidsrc.cc',  label:'VidSrc CC',
+    movie:(id)=>`https://vidsrc.cc/v2/embed/movie/${id}`,
+    tv:(id,s,e)=>`https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` },
+  { id:'vidsrc.xyz', label:'VidSrc XYZ',
+    movie:(id)=>`https://vidsrc.xyz/embed/movie?tmdb=${id}`,
+    tv:(id,s,e)=>`https://vidsrc.xyz/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
+  { id:'multiembed', label:'MultiEmbed',
+    movie:(id)=>`https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    tv:(id,s,e)=>`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}` },
+  { id:'2embed',     label:'2Embed',
+    movie:(id)=>`https://www.2embed.cc/embed/${id}`,
+    tv:(id,s,e)=>`https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
+  { id:'embed.su',   label:'Embed.su',
+    movie:(id)=>`https://embed.su/embed/movie/${id}`,
+    tv:(id,s,e)=>`https://embed.su/embed/tv/${id}/${s}/${e}` }
+];
+
+/* ============================================================
+   أدوات
+   ============================================================ */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = (s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const img = (p,s='w342')=>p?`${IMG}/${s}${p}`:PLACEHOLDER;
+
+function debounce(fn,ms=420){
+  let t; return (...a)=>{clearTimeout(t); t=setTimeout(()=>fn(...a),ms);};
+}
+let toastTimer;
+function toast(msg){
+  const el=$('#toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+/* ============================================================
+   حماية ضد التنزيل والنسخ
+   ============================================================ */
+document.addEventListener('contextmenu', e=>{
+  // اسمح بالسياق داخل حقول الإدخال
+  if (e.target.closest('input, textarea')) return;
+  e.preventDefault();
+});
+document.addEventListener('dragstart', e=>{
+  if (e.target.tagName === 'IMG' || e.target.closest('.card, .player-frame')) {
+    e.preventDefault();
+  }
+});
+document.addEventListener('keydown', e=>{
+  // F12
+  if (e.key === 'F12'){ e.preventDefault(); return; }
+  // Ctrl+Shift+I / J / C
+  if (e.ctrlKey && e.shiftKey && ['I','J','C','i','j','c'].includes(e.key)){
+    e.preventDefault(); return;
+  }
+  // Ctrl+U (view source)
+  if (e.ctrlKey && (e.key === 'u' || e.key === 'U')){ e.preventDefault(); return; }
+  // Ctrl+S (save page)
+  if (e.ctrlKey && (e.key === 's' || e.key === 'S')){ e.preventDefault(); return; }
+  // Ctrl+P (print)
+  if (e.ctrlKey && (e.key === 'p' || e.key === 'P')){ e.preventDefault(); return; }
+});
+
+/* ============================================================
+   نظام المصادقة (localStorage)
+   ============================================================ */
+const USERS_KEY = 'kajogi_users';
+const SESSION_KEY = 'kajogi_session';
+
+async function hashPassword(pw){
+  try{
+    const enc = new TextEncoder();
+    const data = enc.encode(pw);
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  } catch {
+    // fallback بسيط
+    let h = 0;
+    for (let i = 0; i < pw.length; i++){ h = (h<<5) - h + pw.charCodeAt(i); h |= 0; }
+    return String(h);
+  }
+}
+
+function getUsers(){
+  try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveUsers(users){
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+function getSession(){
+  try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); }
+  catch { return null; }
+}
+function saveSession(s){
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+}
+function clearSession(){
+  sessionStorage.removeItem(SESSION_KEY);
+}
+
+function showAuthMsg(elId, msg, type='error'){
+  const el = $('#' + elId);
+  el.textContent = msg;
+  el.className = 'auth-msg show ' + type;
+  setTimeout(()=>{ el.classList.remove('show'); }, 5000);
+}
+
+function setAuthLoading(btnId, loading, text){
+  const btn = $('#' + btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  if (loading){
+    btn.dataset.orig = btn.textContent;
+    btn.textContent = text || 'جارٍ...';
+  } else {
+    btn.textContent = btn.dataset.orig || text;
+  }
+}
+
+/* تسجيل الدخول */
+async function handleLogin(e){
+  e.preventDefault();
+  const email = $('#loginEmail').value.trim().toLowerCase();
+  const password = $('#loginPassword').value;
+
+  if (!email || !password){
+    showAuthMsg('loginMsg','يرجى ملء جميع الحقول.'); return;
+  }
+
+  setAuthLoading('loginBtn', true, 'جارٍ التحقق...');
+
+  const users = getUsers();
+  const user = users.find(u => u.email === email);
+
+  if (!user){
+    setAuthLoading('loginBtn', false);
+    showAuthMsg('loginMsg','لا يوجد حساب بهذا البريد الإلكتروني.');
+    return;
+  }
+
+  const hash = await hashPassword(password);
+  if (hash !== user.passwordHash){
+    setAuthLoading('loginBtn', false);
+    showAuthMsg('loginMsg','كلمة المرور غير صحيحة.');
+    return;
+  }
+
+  saveSession({
+    id: user.id, name: user.name, email: user.email, loginAt: Date.now()
+  });
+
+  setAuthLoading('loginBtn', false);
+  showAuthMsg('loginMsg','تم تسجيل الدخول بنجاح!', 'success');
+
+  setTimeout(()=>startApp(), 500);
+}
+
+/* إنشاء حساب */
+async function handleRegister(e){
+  e.preventDefault();
+  const name = $('#regName').value.trim();
+  const email = $('#regEmail').value.trim().toLowerCase();
+  const pw1 = $('#regPassword').value;
+  const pw2 = $('#regPassword2').value;
+
+  if (name.length < 2){
+    showAuthMsg('registerMsg','الاسم قصير جداً.'); return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    showAuthMsg('registerMsg','البريد الإلكتروني غير صالح.'); return;
+  }
+  if (pw1.length < 6){
+    showAuthMsg('registerMsg','كلمة المرور يجب أن تكون 6 أحرف على الأقل.'); return;
+  }
+  if (pw1 !== pw2){
+    showAuthMsg('registerMsg','كلمتا المرور غير متطابقتين.'); return;
+  }
+
+  setAuthLoading('registerBtn', true, 'جارٍ الإنشاء...');
+
+  const users = getUsers();
+  if (users.some(u => u.email === email)){
+    setAuthLoading('registerBtn', false);
+    showAuthMsg('registerMsg','هذا البريد مسجّل مسبقاً.');
+    return;
+  }
+
+  const hash = await hashPassword(pw1);
+  const newUser = {
+    id: 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2,8),
+    name, email,
+    passwordHash: hash,
+    createdAt: Date.now()
+  };
+  users.push(newUser);
+  saveUsers(users);
+
+  saveSession({
+    id: newUser.id, name: newUser.name, email: newUser.email, loginAt: Date.now()
+  });
+
+  setAuthLoading('registerBtn', false);
+  showAuthMsg('registerMsg','تم إنشاء الحساب بنجاح!', 'success');
+
+  setTimeout(()=>startApp(), 500);
+}
+
+/* تشغيل التطبيق بعد الدخول */
+function startApp(){
+  $('#authScreen').style.display = 'none';
+  $('#app').classList.remove('hidden');
+  const session = getSession();
+  if (session){
+    $('#userName').textContent = session.name;
+    $('#userAvatar').textContent = session.name.charAt(0).toUpperCase();
+    $('#menuName').textContent = session.name;
+    $('#menuEmail').textContent = session.email;
+  }
+  initApp();
+}
+
+/* تسجيل الخروج */
+function logout(){
+  clearSession();
+  location.reload();
+}
+
+/* ============================================================
+   ربط أحداث المصادقة
+   ============================================================ */
+function initAuth(){
+  // التبويبات
+  $$('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', ()=>{
+      const target = tab.dataset.tab;
+      $$('.auth-tab').forEach(t=>t.classList.toggle('active', t === tab));
+      $$('.auth-form').forEach(f=>f.classList.toggle('active', f.id === target+'Form'));
+    });
+  });
+
+  // روابط التبديل
+  $$('[data-switch]').forEach(link => {
+    link.addEventListener('click', e=>{
+      e.preventDefault();
+      const target = link.dataset.switch;
+      $$('.auth-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab === target));
+      $$('.auth-form').forEach(f=>f.classList.toggle('active', f.id === target+'Form'));
+    });
+  });
+
+  // إظهار/إخفاء كلمة المرور
+  $$('.toggle-pw').forEach(btn => {
+    btn.addEventListener('click', ()=>{
+      const input = $('#' + btn.dataset.target);
+      const isPw = input.type === 'password';
+      input.type = isPw ? 'text' : 'password';
+      btn.textContent = isPw ? '🙈' : '👁';
+    });
+  });
+
+  // النماذج
+  $('#loginForm').addEventListener('submit', handleLogin);
+  $('#registerForm').addEventListener('submit', handleRegister);
+}
+
+/* ============================================================
+   API
+   ============================================================ */
+async function api(path, params={}){
+  const url = new URL(BASE+path);
+  url.searchParams.set('language','ar');
+  for (const [k,v] of Object.entries(params)){
+    if (v!==undefined && v!==null && v!=='') url.searchParams.set(k,v);
+  }
+  const res = await fetch(url, {
+    headers:{
+      Authorization:`Bearer ${TOKEN}`,
+      'Content-Type':'application/json;charset=utf-8'
+    }
+  });
+  if (!res.ok) throw new Error(`فشل الطلب (${res.status})`);
+  return res.json();
+}
+
+/* ============================================================
+   الحالة
+   ============================================================ */
+const state = {
+  view:'home', genres:[], activeGenre:null, query:'',
+  page:1, totalPages:1, loader:null, loading:false, appStarted:false
+};
+
+/* ============================================================
+   الكروت
+   ============================================================ */
+function typeOf(item){
+  if (item.media_type==='tv' || item.media_type==='movie') return item.media_type;
+  return item.first_air_date ? 'tv' : 'movie';
+}
+
+function cardHTML(item, index=0){
+  const type  = typeOf(item);
+  const title = item.title || item.name || 'بدون عنوان';
+  const date  = (item.release_date || item.first_air_date || '').slice(0,4) || '—';
+  const rate  = item.vote_average ? item.vote_average.toFixed(1) : '—';
+  return `
+    <article class="card" data-id="${item.id}" data-type="${type}" style="--d:${Math.min(index*30,400)}ms">
+      <img loading="lazy" src="${img(item.poster_path)}" alt="${esc(title)}"
+           onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+      <div class="card-shade"></div>
+      <span class="card-type">${type==='tv'?'مسلسل':'فيلم'}</span>
+      <span class="card-rating">★ ${rate}</span>
+      <div class="card-info">
+        <h3>${esc(title)}</h3>
+        <span>${date}</span>
+      </div>
+    </article>`;
+}
+
+function skeletonRow(count=7){
+  return `<div class="row-scroll">${'<div class="sk sk-card"></div>'.repeat(count)}</div>`;
+}
+
+/* ============================================================
+   الصفوف
+   ============================================================ */
+const ROWS = [
+  { title:'🔥 الأكثر رواجاً هذا الأسبوع', path:'/trending/all/week' },
+  { title:'🎬 في السينما الآن',           path:'/movie/now_playing' },
+  { title:'🍿 أفلام شائعة',               path:'/movie/popular' },
+  { title:'🏆 أعلى تقييماً',              path:'/movie/top_rated' },
+  { title:'📺 مسلسلات شائعة',             path:'/tv/popular' },
+  { title:'⭐ أفضل المسلسلات',            path:'/tv/top_rated' },
+  { title:'🎭 أفلام أنيميشن',             path:'/discover/movie', extra:{ with_genres:'16', sort_by:'popularity.desc' } },
+  { title:'💥 أفلام أكشن',                path:'/discover/movie', extra:{ with_genres:'28', sort_by:'popularity.desc' } }
+];
+
+function renderRowsSkeleton(){
+  $('#rows').innerHTML = ROWS.map(r=>`
+    <section class="row-section">
+      <div class="row-head"><h2 class="row-title">${r.title}</h2></div>
+      ${skeletonRow()}
+    </section>`).join('');
+}
+
+async function loadHero(){
+  const heroEl = $('#hero');
+  try{
+    const data = await api('/trending/all/week');
+    const item = (data.results||[]).find(x=>x.backdrop_path && x.overview) || data.results?.[0];
+    if (!item) throw new Error('لا توجد بيانات');
+    const type  = typeOf(item);
+    const title = item.title || item.name;
+    const date  = (item.release_date || item.first_air_date || '').slice(0,4);
+    const rate  = item.vote_average ? item.vote_average.toFixed(1) : '—';
+
+    heroEl.innerHTML = `
+      <div class="hero-bg" style="background-image:url('${img(item.backdrop_path,'w1280')}')"></div>
+      <div class="hero-inner">
+        <div class="hero-poster">
+          <img src="${img(item.poster_path,'w500')}" alt="${esc(title)}"
+               onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+        </div>
+        <div class="hero-content">
+          <span class="hero-tag"><span class="dot"></span> الأكثر رواجاً الآن</span>
+          <h1 class="hero-title">${esc(title)}</h1>
+          <div class="hero-meta">
+            <span class="star">★ ${rate}</span>
+            <span class="sep"></span>
+            <span>${date || '—'}</span>
+            <span class="sep"></span>
+            <span>${type==='tv'?'مسلسل':'فيلم'}</span>
+          </div>
+          <p class="hero-overview">${esc(item.overview)}</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-open="${item.id}" data-type="${type}">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              مشاهدة الآن
+            </button>
+          </div>
+        </div>
+      </div>`;
+  } catch(err){
+    heroEl.innerHTML = `
+      <div class="hero-inner">
+        <div class="hero-content">
+          <h1 class="hero-title">كاجوجي TV</h1>
+          <p class="hero-overview">تعذّر تحميل المحتوى. تحقق من اتصالك بالإنترنت.</p>
+        </div>
+      </div>`;
+    toast('تعذّر تحميل البيانات: '+err.message);
+  }
+}
+
+async function loadRows(){
+  renderRowsSkeleton();
+  const container = $('#rows');
+  container.innerHTML = '';
+
+  for (const cfg of ROWS){
+    const section = document.createElement('section');
+    section.className = 'row-section';
+    section.innerHTML = `
+      <div class="row-head"><h2 class="row-title">${cfg.title}</h2></div>
+      ${skeletonRow()}`;
+    container.appendChild(section);
+
+    const params = cfg.extra ? { ...cfg.extra } : {};
+    api(cfg.path, params)
+      .then(data=>{
+        const items = (data.results||[]).filter(x=>x.poster_path).slice(0,18);
+        if (!items.length){ section.remove(); return; }
+        const scroll = document.createElement('div');
+        scroll.className = 'row-scroll';
+        scroll.innerHTML = items.map((it,i)=>cardHTML(it,i)).join('');
+        section.innerHTML = `<div class="row-head"><h2 class="row-title">${cfg.title}</h2></div>`;
+        section.appendChild(scroll);
+      })
+      .catch(()=>{
+        section.innerHTML = `
+          <div class="row-head"><h2 class="row-title">${cfg.title}</h2></div>
+          <p style="color:var(--muted);font-size:13.5px;padding:8px 0">تعذّر تحميل هذا القسم.</p>`;
+      });
+  }
+}
+
+/* ============================================================
+   التصنيفات
+   ============================================================ */
+async function loadGenres(){
+  try{
+    const data = await api('/genre/movie/list');
+    state.genres = data.genres || [];
+  } catch { state.genres = []; }
+
+  const bar = $('#chips');
+  bar.innerHTML = `<button class="chip active" data-genre="">الكل</button>` +
+    state.genres.map(g=>`<button class="chip" data-genre="${g.id}">${esc(g.name)}</button>`).join('');
+}
+
+/* ============================================================
+   عرض الاستعراض
+   ============================================================ */
+function showView(view){
+  state.view = view;
+  const home = view === 'home';
+  $('#hero').classList.toggle('hidden', !home);
+  $('#chips').classList.toggle('hidden', !home);
+  $('#rows').classList.toggle('hidden', !home);
+  $('#browse').classList.toggle('hidden', home);
+}
+
+function renderGridSkeleton(n=12){
+  $('#grid').innerHTML = Array.from({length:n},
+    ()=>`<div class="sk" style="aspect-ratio:2/3;border-radius:15px"></div>`).join('');
+}
+
+async function openBrowse({ title, loader, subtitle='' }){
+  showView('browse');
+  window.scrollTo({ top:0, behavior:'smooth' });
+  $('#browseTitle').textContent = title;
+  $('#browseCount').textContent = subtitle;
+  $('#grid').innerHTML = '';
+  renderGridSkeleton();
+  $('#loadMore').classList.add('hidden');
+  state.page = 1;
+  state.loader = loader;
+  state.totalPages = 1;
+  try{
+    const { items, totalPages } = await loader(1);
+    state.totalPages = totalPages;
+    renderGridItems(items);
+    updateLoadMore();
+  } catch(err){
+    $('#grid').innerHTML = `<p style="color:var(--muted);grid-column:1/-1;padding:30px 0;text-align:center">
+      تعذّر تحميل النتائج. حاول مرة أخرى.</p>`;
+    toast(err.message);
+  }
+}
+
+function renderGridItems(items){
+  const grid = $('#grid');
+  if (!items.length){
+    grid.innerHTML = `<p style="color:var(--muted);grid-column:1/-1;padding:40px 0;text-align:center;font-size:15px">
+      لا توجد نتائج مطابقة 🔍</p>`;
+    return;
+  }
+  grid.innerHTML = items.map((it,i)=>cardHTML(it,i)).join('');
+}
+
+function updateLoadMore(){
+  const btn = $('#loadMore');
+  btn.classList.toggle('hidden', state.page >= state.totalPages);
+  btn.disabled = false;
+  btn.textContent = 'تحميل المزيد';
+}
+
+const loaders = {
+  movies:(page)=>api('/movie/popular',{page}).then(d=>({
+    items:(d.results||[]).filter(x=>x.poster_path),
+    totalPages:Math.min(d.total_pages||1,20)
+  })),
+  tv:(page)=>api('/tv/popular',{page}).then(d=>({
+    items:(d.results||[]).filter(x=>x.poster_path),
+    totalPages:Math.min(d.total_pages||1,20)
+  })),
+  genre:(genreId)=>(page)=>api('/discover/movie',{
+    with_genres:genreId, sort_by:'popularity.desc', page
+  }).then(d=>({
+    items:(d.results||[]).filter(x=>x.poster_path),
+    totalPages:Math.min(d.total_pages||1,20)
+  })),
+  search:(q)=>(page)=>api('/search/multi',{query:q,page,include_adult:false}).then(d=>({
+    items:(d.results||[]).filter(x=>x.poster_path && (x.media_type==='movie'||x.media_type==='tv')),
+    totalPages:Math.min(d.total_pages||1,20)
+  }))
+};
+
+async function loadNextPage(){
+  if (state.loading || state.page >= state.totalPages || !state.loader) return;
+  state.loading = true;
+  const btn = $('#loadMore');
+  btn.disabled = true;
+  btn.textContent = 'جارٍ التحميل...';
+  try{
+    const next = state.page + 1;
+    const { items } = await state.loader(next);
+    state.page = next;
+    const grid = $('#grid');
+    const frag = document.createElement('div');
+    frag.innerHTML = items.map((it,i)=>cardHTML(it,i)).join('');
+    [...frag.children].forEach(c=>grid.appendChild(c));
+    updateLoadMore();
+  } catch(err){
+    toast(err.message); updateLoadMore();
+  } finally { state.loading = false; }
+}
+
+const doSearch = debounce((q)=>{
+  if (!q.trim()){ goHome(); return; }
+  state.query = q.trim();
+  openBrowse({
+    title:`نتائج البحث عن "${state.query}"`,
+    loader: loaders.search(state.query)
+  });
+}, 450);
+
+/* ============================================================
+   النافذة المنبثقة + المشغّل
+   ============================================================ */
+const modal = $('#modal');
+const modalPanel = $('#modalPanel');
+let currentMedia = null;
+
+async function openDetails(id, type){
+  document.body.classList.add('locked');
+  modal.classList.add('open');
+  modalPanel.innerHTML = `
+    <button class="modal-close" data-close>✕</button>
+    <div class="modal-hero" style="min-height:200px">
+      <div class="sk" style="position:absolute;inset:0;border-radius:0"></div>
+    </div>
+    <div class="modal-body" style="padding-top:24px">
+      <div class="sk" style="height:24px;width:60%;margin-bottom:12px"></div>
+      <div class="sk" style="height:13px;width:90%;margin-bottom:8px"></div>
+      <div class="sk" style="height:13px;width:80%"></div>
+    </div>`;
+  try{
+    const data = await api(`/${type}/${id}`, {
+      append_to_response:'videos,credits,similar,external_ids'
+    });
+    renderDetails(data, type);
+  } catch(err){
+    modalPanel.innerHTML = `
+      <button class="modal-close" data-close>✕</button>
+      <div class="modal-body" style="padding:60px 30px;text-align:center">
+        <h2 style="margin-bottom:12px">تعذّر تحميل التفاصيل</h2>
+        <p style="color:var(--muted)">${esc(err.message)}</p>
+      </div>`;
+  }
+}
+
+function buildStreamUrl(provider, media){
+  const { id, type, season=1, episode=1 } = media;
+  return type==='tv' ? provider.tv(id, season, episode) : provider.movie(id);
+}
+
+/* ============================================================
+   تشغيل الفيديو
+   ============================================================ */
+function playStream(providerId, media){
+  const provider = STREAM_PROVIDERS.find(p=>p.id===providerId) || STREAM_PROVIDERS[0];
+  const url = buildStreamUrl(provider, media);
+  const frame = $('#playerFrame');
+  if (!frame) return;
+
+  // sandbox صارم: يمنع النوافذ المنبثقة والإعلانات والتنزيل
+  frame.innerHTML = `
+    <div class="player-fallback" id="playerFallback">
+      <div>
+        <div style="font-size:32px;margin-bottom:10px">🎬</div>
+        <p>جارٍ تحميل المشغّل من <b>${provider.label}</b>...</p>
+        <p style="font-size:11.5px;color:#5f5f78;margin-top:8px">
+          حماية ضد الإعلانات مُفعّلة
+        </p>
+      </div>
+    </div>
+    <iframe id="streamIframe"
+      src="${url}"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      allowfullscreen
+      referrerpolicy="no-referrer"
+      loading="eager"></iframe>`;
+
+  const iframe = $('#streamIframe');
+  const fallback = $('#playerFallback');
+  let loaded = false;
+
+  iframe.addEventListener('load', ()=>{
+    loaded = true;
+    setTimeout(()=>{ if (fallback) fallback.style.display = 'none'; }, 900);
+  });
+
+  setTimeout(()=>{
+    if (!loaded && fallback){
+      fallback.innerHTML = `
+        <div style="max-width:460px">
+          <div style="font-size:32px;margin-bottom:10px">⚠️</div>
+          <p style="margin-bottom:8px">المصدر <b>${provider.label}</b> منع العرض داخل التطبيق.</p>
+          <p style="font-size:12px;color:#8b8ba3;margin-bottom:16px">
+            هذا قيد تقني من السيرفر. افتحه في تبويب جديد أو جرّب مصدراً آخر.
+          </p>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <a href="${url}" target="_blank" rel="noopener noreferrer"
+               style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
+                      border-radius:11px;background:linear-gradient(135deg,#8b5cf6,#ec4899);
+                      color:#fff;text-decoration:none;font-weight:700;font-size:13.5px">
+              ▶ فتح في تبويب جديد
+            </a>
+            <button id="retryOtherSource"
+                    style="padding:10px 20px;border-radius:11px;background:#242433;
+                           border:1px solid rgba(255,255,255,.2);color:#fff;font-weight:700;
+                           font-size:13.5px;cursor:pointer">
+              🔄 مصدر آخر
+            </button>
+          </div>
+        </div>`;
+      const retry = $('#retryOtherSource');
+      if (retry) retry.addEventListener('click', ()=>{
+        const btns = $$('.server-btn[data-server]');
+        const cur = btns.findIndex(b=>b.classList.contains('active'));
+        const next = btns[(cur+1) % btns.length];
+        if (next) next.click();
+      });
+    }
+  }, 9000);
+
+  $$('.server-btn').forEach(b=>b.classList.toggle('active', b.dataset.server===provider.id));
+  updatePlayerStatus(media);
+}
+
+function updatePlayerStatus(media){
+  const el = $('#playerStatus');
+  if (!el) return;
+  if (media.type === 'tv'){
+    el.innerHTML = `<span class="dot"></span> الموسم ${media.season} · الحلقة ${media.episode}`;
+  } else {
+    el.innerHTML = `<span class="dot"></span> فيلم كامل`;
+  }
+}
+
+/* ============================================================
+   تفاصيل النافذة
+   ============================================================ */
+function renderDetails(d, type){
+  const title = d.title || d.name || 'بدون عنوان';
+  const date  = (d.release_date || d.first_air_date || '').slice(0,4);
+  const rate  = d.vote_average ? d.vote_average.toFixed(1) : '—';
+  const votes = d.vote_count ? `${d.vote_count.toLocaleString('ar-EG')} تقييم` : '';
+  const genres = (d.genres||[]).map(g=>`<span>${esc(g.name)}</span>`).join('');
+
+  let lengthInfo = '';
+  if (type==='movie' && d.runtime){
+    const h = Math.floor(d.runtime/60), m = d.runtime%60;
+    lengthInfo = `${h>0?h+' س ':''}${m} د`;
+  } else if (type==='tv' && d.number_of_seasons){
+    lengthInfo = `${d.number_of_seasons} ${d.number_of_seasons===1?'موسم':'مواسم'}`;
+  }
+
+  const videos = d.videos?.results || [];
+  const trailer = videos.find(v=>v.site==='YouTube' && v.type==='Trailer')
+               || videos.find(v=>v.site==='YouTube' && v.type==='Teaser')
+               || videos.find(v=>v.site==='YouTube');
+
+  const cast = (d.credits?.cast||[]).slice(0,14);
+  const similar = (d.similar?.results||[]).filter(x=>x.poster_path).slice(0,12);
+  const imdbId = d.imdb_id || d.external_ids?.imdb_id || '';
+
+  currentMedia = {
+    id:d.id, type, title,
+    season:1, episode:1,
+    totalSeasons: d.number_of_seasons || 0
+  };
+
+  let seasonSelector = '';
+  if (type==='tv' && d.number_of_seasons > 0){
+    const seasonOpts = Array.from({length:d.number_of_seasons},
+      (_,i)=>`<option value="${i+1}">الموسم ${i+1}</option>`).join('');
+    seasonSelector = `
+      <select id="seasonSelect" class="server-btn">${seasonOpts}</select>
+      <select id="episodeSelect" class="server-btn"></select>`;
+  }
+
+  modalPanel.innerHTML = `
+    <button class="modal-close" data-close>✕</button>
+
+    <div class="modal-hero">
+      <img class="bd" src="${img(d.backdrop_path,'w1280')}" alt=""
+           onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+      <div class="modal-hero-content">
+        <div class="modal-poster">
+          <img src="${img(d.poster_path,'w500')}" alt="${esc(title)}"
+               onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+        </div>
+        <div class="modal-titles">
+          <h2>${esc(title)}</h2>
+          <div class="modal-meta">
+            <span class="star">★ ${rate}</span>
+            ${votes?`<span>${votes}</span>`:''}
+            ${date?`<span>${date}</span>`:''}
+            ${lengthInfo?`<span class="pill">${lengthInfo}</span>`:''}
+            <span class="pill">${type==='tv'?'مسلسل':'فيلم'}</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${trailer?`
+              <button class="btn btn-ghost" data-trailer="${trailer.key}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/>
+                </svg>
+                الإعلان
+              </button>`:''}
+            ${imdbId?`
+              <a class="btn btn-ghost" target="_blank" rel="noopener"
+                 href="https://www.imdb.com/title/${imdbId}/" style="text-decoration:none">
+                IMDb ↗
+              </a>`:''}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="player-section">
+        <h3 class="sec-title">مشاهدة الآن</h3>
+
+        <div class="player-toolbar">
+          <span class="label">المصدر:</span>
+          ${STREAM_PROVIDERS.map(p=>
+            `<button class="server-btn" data-server="${p.id}">${p.label}</button>`).join('')}
+          <button class="server-btn" id="openExternalBtn"
+            style="background:rgba(139,92,246,.2);color:#c4b5fd;border-color:rgba(139,92,246,.4)">
+            ↗ فتح خارجي
+          </button>
+          ${seasonSelector}
+        </div>
+
+        <div class="player-frame" id="playerFrame">
+          <div class="player-fallback" id="playerFallback">
+            <div>
+              <div style="font-size:32px;margin-bottom:10px">🎬</div>
+              <p>جارٍ التحميل...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-status" id="playerStatus">
+          <span class="dot warn"></span> في انتظار اختيار المصدر
+        </div>
+      </div>
+
+      ${genres?`<div class="genre-list">${genres}</div>`:''}
+
+      ${d.overview
+        ? `<p class="modal-overview">${esc(d.overview)}</p>`
+        : `<p class="modal-overview" style="color:var(--muted)">لا يوجد وصف متاح بالعربية.</p>`}
+
+      ${cast.length?`
+        <h3 class="sec-title">طاقم العمل</h3>
+        <div class="cast-list">
+          ${cast.map(c=>`
+            <div class="cast-item">
+              <img loading="lazy" src="${c.profile_path?img(c.profile_path,'w185'):PLACEHOLDER}"
+                   alt="${esc(c.name)}" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+              <b>${esc(c.name)}</b>
+              <small>${esc(c.character||'')}</small>
+            </div>`).join('')}
+        </div>`:''}
+
+      ${similar.length?`
+        <h3 class="sec-title" style="margin-top:14px">أعمال مشابهة</h3>
+        <div class="similar-grid">
+          ${similar.map((s,i)=>cardHTML({...s, media_type:type}, i)).join('')}
+        </div>`:''}
+    </div>`;
+
+  if (type==='tv'){
+    fillEpisodes(1, d.number_of_episodes || 24);
+  }
+
+  setTimeout(()=>playStream(STREAM_PROVIDERS[0].id, currentMedia), 250);
+}
+
+function fillEpisodes(season, count){
+  const sel = $('#episodeSelect');
+  if (!sel) return;
+  const n = Math.max(count, 1);
+  sel.innerHTML = Array.from({length:n},(_,i)=>`<option value="${i+1}">الحلقة ${i+1}</option>`).join('');
+}
+
+/* ============================================================
+   التنقل
+   ============================================================ */
+function goHome(){
+  $('#searchInput').value = '';
+  $('#clearSearch').classList.remove('show');
+  state.query = '';
+  state.activeGenre = null;
+  $$('.chip').forEach(c=>c.classList.toggle('active', c.dataset.genre===''));
+  $$('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.nav==='home'));
+  $$('.bottom-nav button').forEach(b=>b.classList.toggle('active', b.dataset.nav==='home'));
+  showView('home');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function navigateTo(nav){
+  $$('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.nav===nav));
+  $$('.bottom-nav button').forEach(b=>b.classList.toggle('active', b.dataset.nav===nav));
+  $('#searchInput').value = '';
+  $('#clearSearch').classList.remove('show');
+
+  if (nav==='home'){ goHome(); return; }
+  if (nav==='movies') openBrowse({ title:'أفلام شائعة', loader: loaders.movies });
+  if (nav==='tv') openBrowse({ title:'مسلسلات شائعة', loader: loaders.tv });
+  if (nav==='search'){ $('#searchInput').focus(); window.scrollTo({top:0}); }
+}
+
+/* ============================================================
+   الأحداث
+   ============================================================ */
+function bindEvents(){
+
+  $('#logoBtn').addEventListener('click', e=>{ e.preventDefault(); goHome(); });
+
+  // قائمة المستخدم
+  const chip = $('#userChip');
+  const menu = $('#userMenu');
+  chip.addEventListener('click', e=>{
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', e=>{
+    if (!e.target.closest('#userChip') && !e.target.closest('#userMenu')){
+      menu.classList.remove('open');
+    }
+  });
+  $('#logoutBtn').addEventListener('click', logout);
+
+  // التنقل (رئيسي + شريط سفلي)
+  $$('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>navigateTo(btn.dataset.nav));
+  });
+  $$('.bottom-nav button').forEach(btn=>{
+    btn.addEventListener('click', ()=>navigateTo(btn.dataset.nav));
+  });
+
+  // البحث
+  const input = $('#searchInput');
+  const clearBtn = $('#clearSearch');
+  input.addEventListener('input', e=>{
+    const v = e.target.value;
+    clearBtn.classList.toggle('show', v.length>0);
+    doSearch(v);
+  });
+  input.addEventListener('keydown', e=>{
+    if (e.key==='Escape'){ input.value=''; clearBtn.classList.remove('show'); goHome(); }
+  });
+  clearBtn.addEventListener('click', ()=>{
+    input.value=''; clearBtn.classList.remove('show'); goHome(); input.focus();
+  });
+
+  // التصنيفات
+  $('#chips').addEventListener('click', e=>{
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    $$('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    const gid = chip.dataset.genre;
+    state.activeGenre = gid || null;
+    $$('.nav-btn').forEach(b=>b.classList.remove('active'));
+    $$('.bottom-nav button').forEach(b=>b.classList.remove('active'));
+    if (!gid){ goHome(); return; }
+    const name = state.genres.find(g=>String(g.id)===gid)?.name || '';
+    openBrowse({ title:`أفلام ${name}`, loader: loaders.genre(gid) });
+  });
+
+  // تفويض الأحداث
+  document.addEventListener('click', e=>{
+    const openBtn = e.target.closest('[data-open]');
+    if (openBtn){ openDetails(openBtn.dataset.open, openBtn.dataset.type); return; }
+
+    const trailerBtn = e.target.closest('[data-trailer]');
+    if (trailerBtn){
+      const key = trailerBtn.dataset.trailer;
+      const frame = $('#playerFrame');
+      if (frame){
+        frame.innerHTML = `
+          <iframe src="https://www.youtube.com/embed/${key}?autoplay=1&rel=0&modestbranding=1"
+                  sandbox="allow-scripts allow-same-origin allow-presentation"
+                  allow="autoplay; encrypted-media; fullscreen" allowfullscreen
+                  referrerpolicy="no-referrer" title="الإعلان"></iframe>`;
+        const status = $('#playerStatus');
+        if (status) status.innerHTML = `<span class="dot warn"></span> يتم عرض الإعلان الرسمي`;
+      }
+      return;
+    }
+
+    const serverBtn = e.target.closest('.server-btn[data-server]');
+    if (serverBtn && currentMedia){
+      playStream(serverBtn.dataset.server, currentMedia);
+      return;
+    }
+
+    if (e.target.closest('#openExternalBtn') && currentMedia){
+      const active = $$('.server-btn[data-server]').find(b=>b.classList.contains('active'));
+      const providerId = active?.dataset.server || STREAM_PROVIDERS[0].id;
+      const provider = STREAM_PROVIDERS.find(p=>p.id===providerId);
+      const url = buildStreamUrl(provider, currentMedia);
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    const cardInModal = e.target.closest('.modal-panel .card');
+    if (cardInModal){ openDetails(cardInModal.dataset.id, cardInModal.dataset.type); return; }
+
+    const card = e.target.closest('.card');
+    if (card){ openDetails(card.dataset.id, card.dataset.type); return; }
+
+    if (e.target.closest('[data-close]')) closeModal();
+  });
+
+  // تغيير الموسم/الحلقة
+  document.addEventListener('change', e=>{
+    if (e.target.id === 'seasonSelect'){
+      const season = parseInt(e.target.value,10) || 1;
+      if (!currentMedia) return;
+      currentMedia.season = season;
+      currentMedia.episode = 1;
+      fillEpisodes(season, 24);
+      const active = $$('.server-btn[data-server]').find(b=>b.classList.contains('active'));
+      playStream(active?.dataset.server || STREAM_PROVIDERS[0].id, currentMedia);
+    }
+    if (e.target.id === 'episodeSelect'){
+      const episode = parseInt(e.target.value,10) || 1;
+      if (!currentMedia) return;
+      currentMedia.episode = episode;
+      const active = $$('.server-btn[data-server]').find(b=>b.classList.contains('active'));
+      playStream(active?.dataset.server || STREAM_PROVIDERS[0].id, currentMedia);
+    }
+  });
+
+  document.addEventListener('keydown', e=>{
+    if (e.key==='Escape' && modal.classList.contains('open')) closeModal();
+  });
+
+  $('#loadMore').addEventListener('click', loadNextPage);
+}
+
+/* ============================================================
+   إغلاق النافذة
+   ============================================================ */
+function closeModal(){
+  modal.classList.remove('open');
+  document.body.classList.remove('locked');
+  modalPanel.innerHTML = '';
+  currentMedia = null;
+}
+
+/* ============================================================
+   تهيئة التطبيق
+   ============================================================ */
+async function initApp(){
+  if (state.appStarted) return;
+  state.appStarted = true;
+
+  bindEvents();
+  $('#hero').innerHTML = `<div class="sk sk-hero"></div>`;
+  renderRowsSkeleton();
+  await loadGenres();
+  loadHero();
+  loadRows();
+}
+
+/* ============================================================
+   نقطة البداية
+   ============================================================ */
+function boot(){
+  initAuth();
+  const session = getSession();
+  if (session){
+    startApp();
+  }
+  // خلاف ذلك، تبقى شاشة الدخول ظاهرة
+}
+
+boot();
+</script>
+</body>
+</html>
